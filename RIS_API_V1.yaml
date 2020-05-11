@@ -1,0 +1,564 @@
+swagger: '2.0'
+info:
+  description: >-
+    Este documento pretende ser una guía de entendimiento común, para todos los
+    usuarios involucrados en el consumo, desarrollo, o implementación de alguno
+    de los servicios Backend que RIS ofrece.
+  version: 1.0.0
+  title: RIS PLATFORM API
+schemes:
+  - https
+  - http
+tags:
+  - name: BASES DE DATOS
+    description: >-
+      En esta sección encontrará todo lo relacionado para obtener las bases de
+      datos donde se configuraran los clientes
+  - name: TRANSFORMACIONES
+    description: >-
+      En esta sección encontrará todo lo relacionado para obtener las diferentes
+      transformaciones que son aplicables a un archivo almacenado en RIS
+  - name: CLIENTES
+    description: >-
+      En esta sección encontrará todo lo relacionado con la gestión de un
+      cliente
+  - name: PRODUCTOS
+    description: >-
+      En esta sección encontrará todo lo relacionado con la gestión de un
+      producto
+  - name: PROVEEDORES
+    description: >-
+      En esta sección encontrará todo lo relacionado con la gestión de un
+      producto
+  - name: SERVICIOS DE ENVIO ELECTRÓNICO
+    description: >-
+      En esta sección encontrará todo lo relacionado con la gestión de los servicios de envio electrónico
+  - name: PLANTILLAS SMS
+    description: >-
+      En esta sección encontrará todo lo relacionado creación y gestión de
+      plantillas para el envio de cualquier tipo de SMS
+  - name: PLANTILLAS MAIL
+    description: >-
+      En esta sección encontrará todo lo relacionado creación y gestión de
+      plantillas para el envio de cualquier tipo de MAIL
+paths:
+  /listDatabases:
+    get:
+      tags:
+        - BASES DE DATOS
+      summary: >-
+        Listar todas las bases de datos en las cuales se puede almacenar la
+        información de un cliente. Se implemeta bajo el método getDatabases().
+      description: >-
+        End point que permite listar todas las bases de datos donde puede ser
+        almacenada la información de los clientes extrae la información de la
+        TBL_DATA_BASES de la base de datos dbalmacenamiento. Se implemeta bajo el método getDatabases().
+      operationId: getDatabases
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: >-
+            200 OK. El request es correcto. Esta es la respuesta estándar para
+            respuestas correctas.
+          schema:
+            $ref: '#/definitions/ResponseOKGetDataBases'
+          headers: {}
+        '400':
+          description: >-
+            Bad Request. El servidor no puede o no va a procesar el request por
+            un error de sintaxis del cliente debido a que no cumple con la
+            estructura esperada.
+          schema:
+            $ref: '#/definitions/ResponseBabRequest'
+          headers: {}
+        '401':
+          description: >-
+            401 Unauthorized La autentificación ha fallado o todavía no se a
+            facilitado.
+          schema:
+            $ref: '#/definitions/ResponseUnauthorized'
+          headers: {}
+        '501':
+          description: >-
+            501 Not Implemented. El servidor no reconoce el método del request o
+            carece de la capacidad para completarlo.
+          schema:
+            $ref: '#/definitions/ResponseNotImplemented'
+          headers: {}
+          
+  /listTransformations:
+    get:
+      tags:
+        - TRANSFORMACIONES
+      summary: Listar todas las transformaciones. Se implementa bajo el método getTransformations().
+      description: >-
+        End point que permite listar todas las transformaciones a las que puede
+        ser sometido un archivo almacenado en RIS, extrae la información de la
+        TBL_TRANSFORMACIONES de la base de datos dbalmacenamiento.Se implementa bajo el método getTransformations().
+      operationId: getTransformations
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: >-
+            200 OK. El request es correcto. Esta es la respuesta estándar para
+            respuestas correctas.
+          schema:
+            $ref: '#/definitions/ResponseOKGetTransformations'
+          headers: {}
+        '400':
+          description: >-
+            Bad Request. El servidor no puede o no va a procesar el request por
+            un error de sintaxis del cliente debido a que no cumple con la
+            estructura esperada.
+          schema:
+            $ref: '#/definitions/ResponseBabRequest'
+          headers: {}
+        '401':
+          description: >-
+            401 Unauthorized La autentificación ha fallado o todavía no se a
+            facilitado.
+          schema:
+            $ref: '#/definitions/ResponseUnauthorized'
+          headers: {}
+        '501':
+          description: >-
+            501 Not Implemented. El servidor no reconoce el método del request o
+            carece de la capacidad para completarlo.
+          schema:
+            $ref: '#/definitions/ResponseNotImplemented'
+          headers: {}
+  /createClient:
+    post:
+      tags:
+        - CLIENTES
+      summary: Crear un nuevo cliente.Se implementa bajo el método createClient().
+      description: >-
+        End point que permite crear un nuevo cliente en la tabla
+        TBL_CLIENTE_PRODUCTO_AZURE de la base de datos dbalmacenamiento.Se implementa bajo el método createClient().
+      operationId: createClient
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: >-
+            Objeto que contiene la estructura de un Cliente, todos los atributos
+            del objeto son de caracter OBLIGATORIO y están representados por:
+            nit (Número de Identificación Tributaria del cliente), business_name
+            (Razón social o nombre comercial del cliente),y un arreglo de las
+            cuentas de almacenamiento que posee el cliente. Para cada cuenta de
+            almacenamiento debe registar: el nombre de la cuenta de almacenamiento (azure_account_name), la llave de la cuenta de almacenamiento (azure_account_key) y el sastoken (azure_account_sastoken) .Se implementa bajo el método createClient().
+          required: true
+          schema:
+            $ref: '#/definitions/Client'
+      responses:
+        '201':
+          description: >-
+            Created. El request se ha completado y se ha creado un nuevo
+            recurso. Adicionalmente en la BD se registra la marca de tiempo en
+            que se realizo la creación del cliente
+          schema:
+            $ref: '#/definitions/ReponseCreatedObject'
+          headers: {}
+        '400':
+          description: >-
+            Bad Request. El servidor no puede o no va a procesar el request por
+            un error de sintaxis del cliente debido a que no cumple con la
+            estructura esperada.
+          schema:
+            $ref: '#/definitions/ResponseBabRequest'
+          headers: {}
+        '401':
+          description: >-
+            401 Unauthorized La autentificación ha fallado o todavía no se a
+            facilitado.
+          schema:
+            $ref: '#/definitions/ResponseUnauthorized'
+          headers: {}
+        '501':
+          description: >-
+            501 Not Implemented. El servidor no reconoce el método del request o
+            carece de la capacidad para completarlo.
+          schema:
+            $ref: '#/definitions/ResponseNotImplemented'
+          headers: {}
+  /listClients:
+    get:
+      tags:
+        - CLIENTES
+      summary: Listar todos clientes. Se implementa bajo el método getClients().
+      description: >-
+        End point que permite listar todos clientes registrados en la tabla
+        TBL_CLIENTE_PRODUCTO_AZURE de la base de datos dbalmacenamiento. Se implementa bajo el método getClients().
+      operationId: getClients
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: >-
+            200 OK. El request es correcto. Esta es la respuesta estándar para
+            respuestas correctas.
+          schema:
+            $ref: '#/definitions/ResponseOKGetClients'
+          headers: {}
+        '400':
+          description: >-
+            Bad Request. El servidor no puede o no va a procesar el request por
+            un error de sintaxis del cliente debido a que no cumple con la
+            estructura esperada.
+          schema:
+            $ref: '#/definitions/ResponseBabRequest'
+          headers: {}
+        '401':
+          description: >-
+            401 Unauthorized La autentificación ha fallado o todavía no se a
+            facilitado.
+          schema:
+            $ref: '#/definitions/ResponseUnauthorized'
+          headers: {}
+        '501':
+          description: >-
+            501 Not Implemented. El servidor no reconoce el método del request o
+            carece de la capacidad para completarlo.
+          schema:
+            $ref: '#/definitions/ResponseNotImplemented'
+          headers: {}
+          
+  /listClient/{client_code}:
+    get:
+      tags:
+      - CLIENTES
+      summary: Obtener un cliente por su código de cliente (client_code). Se implementa bajo el método getClientByID().
+      description: "End point que permite obtener la información de un cliente asociado al parametro client_code.Se implementa bajo el método getClientByID()."
+      operationId: "getClientByID"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "client_code"
+        in: "path"
+        description: "Código que identifica al cliente de manera única en RIS, es otra llave diferente al NIT dado que es asignada por el sistema."
+        required: true
+        type: "integer"
+      responses:
+        '200':
+          description: >-
+            200 OK. El request es correcto. Esta es la respuesta estándar para
+            respuestas correctas.
+          schema:
+            $ref: '#/definitions/Clients'
+          headers: {}
+        '400':
+          description: >-
+            Bad Request. El servidor no puede o no va a procesar el request por
+            un error de sintaxis del cliente debido a que no cumple con la
+            estructura esperada.
+          schema:
+            $ref: '#/definitions/ResponseBabRequest'
+          headers: {}
+        '401':
+          description: >-
+            401 Unauthorized La autentificación ha fallado o todavía no se a
+            facilitado.
+          schema:
+            $ref: '#/definitions/ResponseUnauthorized'
+          headers: {}
+        '501':
+          description: >-
+            501 Not Implemented. El servidor no reconoce el método del request o
+            carece de la capacidad para completarlo.
+          schema:
+            $ref: '#/definitions/ResponseNotImplemented'
+          headers: {}
+  
+  /updateClient/{client_code}:
+    put:
+      tags:
+        - CLIENTES
+      summary: Actualizar un cliente previamente registrado. Se implementa bajo el método updateClient().
+      description: >-
+        End point que permite actualizar un  cliente en la tabla
+        TBL_CLIENTE_PRODUCTO_AZURE de la base de datos dbalmacenamiento.Se implementa bajo el método updateClient().
+      operationId: updateClient
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: client_code
+          description: "Código que identifica al cliente de manera única en RIS, es otra llave diferente al NIT dado que es asignada por el sistema."
+          required: true
+          type: "integer"
+        - in: body
+          name: body
+          description: >-
+            Objeto que contiene la estructura de un Cliente, y espera alguno de los siguientes atributos:
+             nit (Número de Identificación Tributaria del cliente), business_name (Razón social o nombre comercial del cliente),y un arreglo de las cuentas de almacenamiento que posee el cliente. Para cada cuenta de almacenamiento debe registar: el nombre de la cuenta de almacenamiento (azure_account_name), la llave de la cuenta de almacenamiento (azure_account_key) y el sastoken (azure_account_sastoken) .Se implementa bajo el método updateClient().
+          required: true
+          schema:
+            $ref: '#/definitions/Client'
+      responses:
+        '200':
+          description: >-
+           200 OK. El request es correcto. Esta es la respuesta estándar para respuestas correctas.
+          schema:
+            $ref: '#/definitions/ResponseOk'
+          headers: {}
+        '400':
+          description: >-
+            Bad Request. El servidor no puede o no va a procesar el request por
+            un error de sintaxis del cliente debido a que no cumple con la
+            estructura esperada.
+          schema:
+            $ref: '#/definitions/ResponseBabRequest'
+          headers: {}
+        '401':
+          description: >-
+            401 Unauthorized La autentificación ha fallado o todavía no se a
+            facilitado.
+          schema:
+            $ref: '#/definitions/ResponseUnauthorized'
+          headers: {}
+        '501':
+          description: >-
+            501 Not Implemented. El servidor no reconoce el método del request o
+            carece de la capacidad para completarlo.
+          schema:
+            $ref: '#/definitions/ResponseNotImplemented'
+          headers: {}
+          
+  /deleteClient/{client_code}:
+    delete:
+      tags:
+        - CLIENTES
+      summary: Desactivar un cliente previamente registrado. Se implementa bajo el método inactivateClient().
+      description: >-
+        End point que permite desactivar un cliente de la tabla
+        TBL_CLIENTE_PRODUCTO_AZURE de la base de datos dbalmacenamiento. Simplemente cambia el valor de la columna activo de 1 a 0.Se implementa bajo el método inactivateClient().
+      operationId: inactivateClient
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: client_code
+          description: "Código que identifica al cliente de manera única en RIS, es otra llave diferente al NIT dado que es asignada por el sistema."
+          required: true
+          type: "integer"
+      responses:
+        '200':
+          description: >-
+            Operación realizada exitosamente
+          schema:
+            $ref: '#/definitions/ResponseOk'
+          headers: {}
+        '400':
+          description: >-
+            Bad Request. El servidor no puede o no va a procesar el request por
+            un error de sintaxis del cliente debido a que no cumple con la
+            estructura esperada.
+          schema:
+            $ref: '#/definitions/ResponseBabRequest'
+          headers: {}
+        '401':
+          description: >-
+            401 Unauthorized La autentificación ha fallado o todavía no se a
+            facilitado.
+          schema:
+            $ref: '#/definitions/ResponseUnauthorized'
+          headers: {}
+        '501':
+          description: >-
+            501 Not Implemented. El servidor no reconoce el método del request o
+            carece de la capacidad para completarlo.
+          schema:
+            $ref: '#/definitions/ResponseNotImplemented'
+          headers: {}
+          
+definitions:
+  Transformation:
+    type: object
+    required:
+      - transformation_code
+      - transformation_name
+    properties:
+      transformation_code:
+        type: integer
+        format: int32
+        example: 2
+      transformation_name:
+        type: string
+        example: AFP
+  Client:
+    type: object
+    required:
+      - nit
+      - business_name
+      - azureStorageAccounts
+    properties:
+      nit:
+        type: string
+        example: 1234566-1
+      business_name:
+        type: string
+        example: Client Test
+      azureStorageAccounts:
+        type: array
+        items:
+          $ref: '#/definitions/AzureStorageAccount'
+  ReponseCreatedObject:
+    type: object
+    required:
+      - code
+      - message
+      - client_code
+    properties:
+      code:
+        type: integer
+        format: int32
+        example: 201
+      client_code:
+        type: integer
+        format: int32
+        example: 50
+      message:
+        type: string
+        example: Cliente Creado Exitosamente
+        
+  ResponseBabRequest:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+        example: 400
+      message:
+        type: string
+        example: El servidor no puede procesar la solicitud.
+        
+  ResponseUnauthorized:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+        example: 401
+      message:
+        type: string
+        example: La autentificación ha fallado o todavía no se a facilitado.
+        
+  ResponseNotImplemented:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+        example: 501
+      message:
+        type: string
+        example: >-
+          El servidor no reconoce el método del request o carece de la capacidad
+          para completarlo.
+          
+  DataBases:
+    type: object
+    required:
+      - data_base_name
+    properties:
+      data_base_name:
+        type: string
+        example: dbalmacenamiento
+      environment:
+        type: string
+        example: produccion
+      connection_string:
+        type: string
+        example: >-
+          Server=tcp:dbalmacenamiento.database.windows.net,1433;Initial
+          Catalog=dbalmacenamiento;Persist Security Info=False;User
+          ID=admindba;Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection
+          Timeout=30;
+          
+  Clients:
+    type: object
+    required:
+      - client_code
+      - nit
+      - business_name
+      - azureStorageAccounts
+    properties:
+      client_code:
+        type: integer
+        format: Small Int
+        example: 50
+      nit:
+        type: string
+        example: 1234566-1
+      business_name:
+        type: string
+        example: Client Test
+      azureStorageAccounts:
+        type: array
+        items:
+          $ref: '#/definitions/AzureStorageAccount'
+  AzureStorageAccount:
+    type: object
+    required:
+      - azure_account_name
+      - azure_account_key
+      - azure_account_sastoken
+    properties:
+      azure_account_name:
+        type: string
+        example: computecdatacourrier
+      azure_account_key:
+        type: string
+        example: >-
+          IPDhLFxGbEhEIEN5z9ly49QMgCGeD+ynlbP6gUAc1INpe1gFf/U45zg8dOcjbBEjiM2wi781UKn96O1PPI5SXA==
+      azure_account_sastoken:
+        type: string
+        example: >-
+          ?sv=2019-02-02&ss=b&srt=sco&sp=rwdlac&se=2062-11-28T07:14:13Z&st=2019-11-27T23:14:13Z&spr=https&sig=5mrkiwMvB6RkfbMYcyWMlNy4MG0YQ386zIkPt23tSHA%3D
+  ResponseOKGetClients:
+    type: array
+    items:
+      $ref: '#/definitions/Clients'
+  ResponseOKGetDataBases:
+    type: array
+    items:
+      $ref: '#/definitions/DataBases'
+      
+  ResponseOKGetTransformations:
+    type: array
+    items:
+      $ref: '#/definitions/Transformation'
+      
+  ResponseOk:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+        example: 200
+      message:
+        type: string
+        example: >-
+          Operación realizada exitosamente.
+          
